@@ -7,7 +7,7 @@ export default function Settings({ currency, setCurrency, threshold, setThreshol
 
   useEffect(() => {
     if (utils.isExtensionMode()) {
-      chrome.storage.local.get(['currency', 'threshold'], (result) => {
+      chrome.storage.local.get(['currency', 'threshold', 'rate'], (result) => {
         if (result.currency) setCurrency(result.currency);
         if (result.threshold) setThreshold(result.threshold);
       });
@@ -16,9 +16,12 @@ export default function Settings({ currency, setCurrency, threshold, setThreshol
 
   const handleSave = () => {
     if (utils.isExtensionMode()) {
-      chrome.storage.local.set({ currency, threshold }, () => {
-        setSaved(true);
-        setTimeout(() => setSaved(false), 1000);
+        chrome.local.storage.clear( () => {
+        let rate = 0
+        chrome.storage.local.set({ currency: currency, threshold: threshold, rate: rate }, () => {
+          setSaved(true);
+          setTimeout(() => setSaved(false), 1000);
+        });
       });
     }
   };

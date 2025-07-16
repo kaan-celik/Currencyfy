@@ -1,5 +1,5 @@
 import api from "./popup/api/api";
-import { APP_ID, Currencies } from "./popup/constants";
+import { DEC, INC } from "./popup/constants";
 chrome.alarms.create('checkRates', { periodInMinutes: 60 });
 
 chrome.alarms.onAlarm.addListener(() => {
@@ -8,15 +8,14 @@ chrome.alarms.onAlarm.addListener(() => {
     try {
       const data = api.getLatestRates()
       const rate = 1 / data.rates[currency];
-      // Basit eşik kontrolü
-      const previous = 27;  // burada basit sabit
-      const diffPercent = Math.abs(rate - previous) / previous * 100;
-
-      if (diffPercent > threshold) {
+      const previous = 27;  //TODO: must be dynamic
+      const diffPercent = (rate - previous) / previous;
+      const message = diffPercent < 0 ? DEC : INC;
+      if (Math.abs(diffPercent) > threshold) {
         chrome.notifications.create({
           type: 'basic',
           title: 'Currency Alert',
-          message: `${currency} moved > ${threshold}%! Current rate: ${rate.toFixed(2)}`
+          message: `${currency} ${message} ${Math.abs(diffPercent)}%! Current rate: ${rate.toFixed(2)}`
         });
       }
     } catch (error) {
