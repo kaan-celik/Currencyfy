@@ -1,25 +1,35 @@
 import api from "./popup/api/api";
 import { DEC, INC } from "./popup/constants";
-chrome.alarms.create('checkRates', { periodInMinutes: 60 });
-
-chrome.alarms.onAlarm.addListener(() => {
-  chrome.storage.local.get(['currency', 'threshold'], async ({ currency, threshold }) => {
-    if (!currency || !threshold) return;
-    try {
-      const data = api.getLatestRates()
-      const rate = 1 / data.rates[currency];
-      const previous = 27;  //TODO: must be dynamic
-      const diffPercent = (rate - previous) / previous;
-      const message = diffPercent < 0 ? DEC : INC;
-      if (Math.abs(diffPercent) > threshold) {
-        chrome.notifications.create({
-          type: 'basic',
-          title: 'Currency Alert',
-          message: `${currency} ${message} ${Math.abs(diffPercent)}%! Current rate: ${rate.toFixed(2)}`
-        });
+import utils from "./popup/utils";
+if (utils.isExtensionMode()) {
+  chrome.alarms.create("checkRates", { periodInMinutes: 60 });
+  chrome.alarms.onAlarm.addListener(() => {
+    chrome.storage.local.get(
+      ["currency", "threshold", "rate"],
+      async ({ currency, threshold, rate }) => {
+        createAlarm(currency, threshold, rate);
       }
-    } catch (error) {
-      console.error('Fetch error:', error);
-    }
+    );
   });
-});
+}
+
+const createAlarm = (currency, threshold, rate) => {
+  if (!currency || !threshold || !rate) return;
+  try {
+    const data = api.getLatestRates();
+    const currentRate = 1 / data.rates[currency];
+    const diffPercent = (rate - currentRate) / currentRate;
+    const message = diffPercent < 0 ? DEC : INC;
+    if (Math.abs(diffPercent) > threshold) {
+      chrome.notifications.create({
+        type: "basic",
+        title: "Currency Alert",
+        message: `${currency} ${message} ${Math.abs(
+          diffPercent
+        )}%! Current rate: ${rate.toFixed(2)}`,
+      });
+    }
+  } catch (error) {
+    console.error("Alarm created an error:", error);
+  }
+};
