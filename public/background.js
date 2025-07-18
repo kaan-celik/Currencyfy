@@ -1,6 +1,6 @@
-import api from "./popup/api/api";
-import { DEC, INC } from "./popup/constants";
-import utils from "./popup/utils";
+import api from "../src/popup/api/api";
+import { DEC, INC } from "../src/popup/constants";
+import utils from "../src/popup/utils";
 if (utils.isExtensionMode()) {
   chrome.alarms.create("checkRates", { periodInMinutes: 60 });
   chrome.alarms.onAlarm.addListener(() => {

@@ -4,7 +4,7 @@ import Header from './popup/components/Header';
 import CurrencyChart from './popup/components/CurrencyChart';
 import Settings from './popup/components/Settings';
 import './popup/styles/popup.css';
-import defaultExcCurrency, { defaultThreshold } from './popup/constants';
+import {defaultExcCurrency, defaultThreshold}  from './popup/constants';
 import utils from './popup/utils';
 import api from './popup/api/api';
 

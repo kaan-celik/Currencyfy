@@ -2,7 +2,7 @@
 
  const getDates = () => {
     const endDate = dayjs();
-    const startDate = dayjs().subtract(30, 'day');
+    const startDate = dayjs().subtract(7, 'day');
     return {start: startDate, end: endDate};
   }
 
@@ -11,6 +11,6 @@
   }
 
   export default {
-    getDates
+    getDates,
     isExtensionMode
   }
