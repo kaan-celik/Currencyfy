@@ -4,7 +4,17 @@
   "version": "1.0",
   "description": "Track currency rates in a popup with chart and alert threshold.",
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icons/currency-16.png",
+      "48": "icons/currency-48.png",
+      "96": "icons/currency-96.png"
+    }
+  },
+  "icons": {
+    "16": "icons/currency-16.png",
+    "48": "icons/currency-48.png",
+    "96": "icons/currency-96.png"
   },
   "permissions": [
     "storage",
