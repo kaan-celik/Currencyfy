@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Currencies } from "../constants";
 import utils from "../utils";
 import api from "../api/api";
+import { Button, TextField, MenuItem } from "@mui/material";
 
 export default function Settings({
   currency,
@@ -36,27 +37,26 @@ export default function Settings({
     }
   };
 
+  const Spacer = ({ size = 16 }) => <div style={{ width: size }} />;
   return (
     <div className="settings">
-      <label>
-        Currency:
-        <select value={currency} onChange={(e) => setCurrency(e.target.value)}>
-          {Currencies.map((p, idx) => (
-            <option key={idx} value={p}>
-              {p}
-            </option>
+      <TextField
+          id="outlined-select-currency"
+          select
+          label="Currency"
+          size = 'small'
+          sx={{ m: 1 }}
+          defaultValue={currency}
+          onChange={(e) => setCurrency(e.target.value)}
+        >{Currencies.map((option,idx) => (
+            <MenuItem key={idx} value={option}>
+              {option}
+            </MenuItem>
           ))}
-        </select>
-      </label>
-      <label>
-        Threshold (%):
-        <input
-          type="number"
-          value={threshold}
-          onChange={(e) => setThreshold(e.target.value)}
-        />
-      </label>
-      <button onClick={handleSave}>Save Alarm</button>
+      </TextField>
+      <TextField id="outlined-basic" size = 'small' sx={{ m: 1 }} label="Threshold (%)" variant="outlined" type="number" value={threshold} onChange={(e) => setThreshold(e.target.value)}/>
+      <Spacer size={10} />
+      <Button variant="contained" color="primary" sx={{ m: 1 }} onClick={handleSave}>Save Alarm</Button>
       {saved && <span>✅ Saved!</span>}
     </div>
   );
